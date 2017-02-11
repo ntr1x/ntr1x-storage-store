@@ -50,7 +50,8 @@ public class OrderResource {
 	@GET
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
-    public OrderPageResponse shared(
+    @RolesAllowed({ "res:///orders:admin" })
+    public OrderPageResponse query(
 		@QueryParam("user") Long user,
 		@QueryParam("relate") Long relate,
 		@QueryParam("states") Set<Order.State> states,
