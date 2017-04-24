@@ -69,8 +69,8 @@ public class Order extends Resource {
 	@XmlElement
 	@JsonManagedReference
 	@ManyToOne
-    @JoinColumn(name = "RelateId", nullable = false, updatable = false)
-    private Resource relate;
+	@JoinColumn(name = "RelateId", nullable = false, updatable = false)
+	private Resource relate;
 	
 	@XmlElement
 	@JsonManagedReference
