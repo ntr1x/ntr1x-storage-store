@@ -18,64 +18,64 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
 public interface IOfferService {
-	
-	Offer create(long scope, OfferCreate create);
-	Offer update(Long scope, long id, OfferUpdate update);
-	
-	Offer select(Long scope, long id);
-	
-	Page<Offer> query(Long scope, Long user, Long relate, Pageable pageable);
-	
-	Offer remove(Long scope, long id);
-	
-	@XmlRootElement
+    
+    Offer create(long scope, OfferCreate create);
+    Offer update(Long scope, long id, OfferUpdate update);
+    
+    Offer select(Long scope, long id);
+    
+    Page<Offer> query(Long scope, Long user, Long relate, Pageable pageable);
+    
+    Offer remove(Long scope, long id);
+    
+    @XmlRootElement
     @NoArgsConstructor
     @AllArgsConstructor
     public static class OfferPageResponse {
 
-    	public long count;
+        public long count;
         public int page;
         public int size;
 
         @XmlElement
         public List<Offer> content;
-	}
-	
-	@XmlRootElement
+    }
+    
+    @XmlRootElement
     @NoArgsConstructor
     @AllArgsConstructor
     public static class OfferCreate {
         
-		public Long relate;
-		public Long user;
-		public Long image;
-		
-		@NotBlank
-    	public String title;
-    	public String promo;
-    	public String body;
-    	
-    	@ApiModelProperty(dataType = "Object")
-    	public JsonNode extra;
-    	
-    	public RelatedImage[] images;
+        public Long relate;
+        public Long user;
+        public Long image;
+        
+        @NotBlank
+        public String title;
+        public String promo;
+        public String body;
+        
+        @ApiModelProperty(dataType = "Object")
+        public JsonNode extra;
+        
+        public RelatedImage[] images;
     }
     
     @XmlRootElement
     @NoArgsConstructor
     @AllArgsConstructor
     public static class OfferUpdate {
-		
-    	public Long image;
-    	
-		@NotBlank
-    	public String title;
+        
+        public Long image;
+        
+        @NotBlank
+        public String title;
         public String promo;
-    	public String body;
-    	
-    	@ApiModelProperty(dataType = "Object")
-    	public JsonNode extra;
-    	
-    	public RelatedImage[] images;
+        public String body;
+        
+        @ApiModelProperty(dataType = "Object")
+        public JsonNode extra;
+        
+        public RelatedImage[] images;
     }
 }

@@ -37,37 +37,37 @@ import io.swagger.annotations.Api;
 @PermitAll
 public class OfferResource {
 
-	@Inject
-	private IOfferService offers;
-	
-	@Inject
-	private Provider<IUserScope> scope;
-	
-	@GET
+    @Inject
+    private IOfferService offers;
+    
+    @Inject
+    private Provider<IUserScope> scope;
+    
+    @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
     public OfferPageResponse query(
-		@QueryParam("user") Long user,
-		@QueryParam("relate") Long relate,
-		@BeanParam PageableQuery pageable
+        @QueryParam("user") Long user,
+        @QueryParam("relate") Long relate,
+        @BeanParam PageableQuery pageable
     ) {
-    	
+        
         Page<Offer> p = offers.query(
-    		scope.get().getId(),
-			user,
-			relate,
-			pageable.toPageRequest()
-		);
+            scope.get().getId(),
+            user,
+            relate,
+            pageable.toPageRequest()
+        );
         
         return new OfferPageResponse(
-    		p.getTotalElements(),
-    		p.getNumber(),
-    		p.getSize(),
-    		p.getContent()
-		);
+            p.getTotalElements(),
+            p.getNumber(),
+            p.getSize(),
+            p.getContent()
+        );
     }
-	
-	@POST
+    
+    @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
@@ -75,20 +75,20 @@ public class OfferResource {
     public Offer create(@Valid OfferCreate create) {
 
         return offers.create(scope.get().getId(), create);
-	}
-	
-	@PUT
-	@Path("/i/{id}")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	@Transactional
-	@RolesAllowed({ "res:///offers/i/{id}:admin" })
-	public Offer update(@PathParam("id") long id, @Valid OfferUpdate update) {
-	    
-	    return offers.update(scope.get().getId(), id, update);
-	}
-	
-	@GET
+    }
+    
+    @PUT
+    @Path("/i/{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Transactional
+    @RolesAllowed({ "res:///offers/i/{id}:admin" })
+    public Offer update(@PathParam("id") long id, @Valid OfferUpdate update) {
+        
+        return offers.update(scope.get().getId(), id, update);
+    }
+    
+    @GET
     @Path("/i/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
@@ -96,14 +96,14 @@ public class OfferResource {
         
         return offers.select(scope.get().getId(), id);
     }
-	
-	@DELETE
+    
+    @DELETE
     @Path("/i/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
     @RolesAllowed({ "res:///offers/i/{id}:admin" })
     public Offer remove(@PathParam("id") long id) {
         
-	    return offers.remove(scope.get().getId(), id);
+        return offers.remove(scope.get().getId(), id);
     }
 }

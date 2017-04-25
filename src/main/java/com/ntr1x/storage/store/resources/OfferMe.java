@@ -34,7 +34,7 @@ import io.swagger.annotations.Api;
 @PermitAll
 public class OfferMe {
 
-	@Inject
+    @Inject
     private IOfferService offers;
 
     @Inject
@@ -48,23 +48,23 @@ public class OfferMe {
     @Transactional
     @RolesAllowed({ "auth" })
     public OfferPageResponse query(
-		@QueryParam("relate") Long relate,
-		@BeanParam PageableQuery pageable
+        @QueryParam("relate") Long relate,
+        @BeanParam PageableQuery pageable
     ) {
-    	
-    	Page<Offer> p = offers.query(
-    		scope.get().getId(),
-			principal.get().getUser().getId(),
-			relate,
-			pageable.toPageRequest()
-		);
+        
+        Page<Offer> p = offers.query(
+            scope.get().getId(),
+            principal.get().getUser().getId(),
+            relate,
+            pageable.toPageRequest()
+        );
         
         return new OfferPageResponse(
-    		p.getTotalElements(),
-    		p.getNumber(),
-    		p.getSize(),
-    		p.getContent()
-		);
+            p.getTotalElements(),
+            p.getNumber(),
+            p.getSize(),
+            p.getContent()
+        );
     }
 
     @POST
@@ -74,8 +74,8 @@ public class OfferMe {
     @RolesAllowed({ "auth" })
     public Offer create(@Valid OfferCreate create) {
 
-    	create.user = principal.get().getUser().getId();
-    	
+        create.user = principal.get().getUser().getId();
+        
         return offers.create(scope.get().getId(), create);
-	}
+    }
 }

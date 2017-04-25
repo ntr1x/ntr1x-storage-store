@@ -9,26 +9,26 @@ import org.springframework.data.repository.query.Param;
 import com.ntr1x.storage.store.model.Offer;
 
 public interface OfferRepository extends JpaRepository<Offer, Long> {
-	
-	@Query(
+    
+    @Query(
         " SELECT o"
       + " FROM Offer o"
       + " WHERE (:scope IS NULL OR o.scope = :scope)"
-      + "	AND (:user IS NULL OR (:user = 0 AND o.user IS NULL) OR o.user.id = :user)"
-      + "	AND (:relate IS NULL OR (:relate = 0 AND o.relate IS NULL) OR o.relate.id = :relate)"
+      + "    AND (:user IS NULL OR (:user = 0 AND o.user IS NULL) OR o.user.id = :user)"
+      + "    AND (:relate IS NULL OR (:relate = 0 AND o.relate IS NULL) OR o.relate.id = :relate)"
     )
     Page<Offer> query(
-		@Param("scope") Long scope,
-		@Param("user") Long user,
-		@Param("relate") Long relate,
-		Pageable pageable
-	);
-	
-	@Query(
+        @Param("scope") Long scope,
+        @Param("user") Long user,
+        @Param("relate") Long relate,
+        Pageable pageable
+    );
+    
+    @Query(
         " SELECT o"
       + " FROM Offer o"
       + " WHERE (:scope IS NULL OR o.scope = :scope)"
-      + "	AND (o.id = :id)"
+      + "    AND (o.id = :id)"
     )
-	Offer select(@Param("scope") Long scope, @Param("id") long id);
+    Offer select(@Param("scope") Long scope, @Param("id") long id);
 }

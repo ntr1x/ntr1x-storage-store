@@ -38,7 +38,7 @@ import io.swagger.annotations.ApiParam;
 @PermitAll
 public class OrderMe {
 
-	@Inject
+    @Inject
     private IOrderService orders;
 
     @Inject
@@ -52,29 +52,29 @@ public class OrderMe {
     @Transactional
     @RolesAllowed({ "auth" })
     public OrderPageResponse query(
-		@QueryParam("relate") Long relate,
-		@QueryParam("states") Set<Order.State> states,
-		@QueryParam("since") @ApiParam(example = "2016-10-01T17:30") LocalDateTime since,
-		@QueryParam("until") @ApiParam(example = "2016-10-01T21:00") LocalDateTime until,
-		@BeanParam PageableQuery pageable
+        @QueryParam("relate") Long relate,
+        @QueryParam("states") Set<Order.State> states,
+        @QueryParam("since") @ApiParam(example = "2016-10-01T17:30") LocalDateTime since,
+        @QueryParam("until") @ApiParam(example = "2016-10-01T21:00") LocalDateTime until,
+        @BeanParam PageableQuery pageable
     ) {
-    	
-    	Page<Order> p = orders.query(
-    		scope.get().getId(),
-			principal.get().getUser().getId(),
-			relate,
-			states,
-			since,
-			until,
-			pageable.toPageRequest()
-		);
+        
+        Page<Order> p = orders.query(
+            scope.get().getId(),
+            principal.get().getUser().getId(),
+            relate,
+            states,
+            since,
+            until,
+            pageable.toPageRequest()
+        );
         
         return new OrderPageResponse(
-    		p.getTotalElements(),
-    		p.getNumber(),
-    		p.getSize(),
-    		p.getContent()
-		);
+            p.getTotalElements(),
+            p.getNumber(),
+            p.getSize(),
+            p.getContent()
+        );
     }
 
     @POST
@@ -84,8 +84,8 @@ public class OrderMe {
     @RolesAllowed({ "auth" })
     public Order create(@Valid OrderCreate create) {
 
-    	create.user = principal.get().getUser().getId();
-    	
+        create.user = principal.get().getUser().getId();
+        
         return orders.create(scope.get().getId(), create);
-	}
+    }
 }

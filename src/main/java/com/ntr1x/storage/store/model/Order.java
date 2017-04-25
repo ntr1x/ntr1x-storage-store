@@ -32,57 +32,57 @@ import lombok.Setter;
 @AllArgsConstructor
 @Entity
 @Table(
-	name = "orders"
+    name = "orders"
 )
 @PrimaryKeyJoinColumn(name = "ResourceId", referencedColumnName = "Id")
 @CascadeOnDelete
 public class Order extends Resource {
-	
-	public enum State {
-		
-		NEW,
-		ACCEPTED,
-		DECLINED,
-		CANCELLED,
-		;
-		
-		public EnumSet<State> arrows() {
-			
-			switch (this) {
-			case NEW:
-				return EnumSet.of(ACCEPTED, DECLINED, CANCELLED);
-			case ACCEPTED:
-				return EnumSet.noneOf(Order.State.class);
-			case DECLINED:
-				return EnumSet.noneOf(Order.State.class);
-			case CANCELLED:
-				return EnumSet.noneOf(Order.State.class);
-			default:
-				throw new IllegalStateException();
-			}
-		}
-	}
-	
-	@Column(name = "State", nullable = false)
-	private State state;
-	
-	@XmlElement
-	@JsonManagedReference
-	@ManyToOne
-	@JoinColumn(name = "RelateId", nullable = false, updatable = false)
-	private Resource relate;
-	
-	@XmlElement
-	@JsonManagedReference
-	@ManyToOne
-	@JoinColumn(name = "UserId", nullable = false, updatable = false)
-	private User user;
-		
-	@Column(name = "Created")
-	@XmlJavaTypeAdapter(LocalDateTimeConverter.class)
-	@ApiModelProperty(example="2016-10-07T04:05")
-	private LocalDateTime created;
-	
-	@Column(name = "Quantity", nullable = true, scale = 2, precision = 10)
-	private BigDecimal quantity;
+    
+    public enum State {
+        
+        NEW,
+        ACCEPTED,
+        DECLINED,
+        CANCELLED,
+        ;
+        
+        public EnumSet<State> arrows() {
+            
+            switch (this) {
+            case NEW:
+                return EnumSet.of(ACCEPTED, DECLINED, CANCELLED);
+            case ACCEPTED:
+                return EnumSet.noneOf(Order.State.class);
+            case DECLINED:
+                return EnumSet.noneOf(Order.State.class);
+            case CANCELLED:
+                return EnumSet.noneOf(Order.State.class);
+            default:
+                throw new IllegalStateException();
+            }
+        }
+    }
+    
+    @Column(name = "State", nullable = false)
+    private State state;
+    
+    @XmlElement
+    @JsonManagedReference
+    @ManyToOne
+    @JoinColumn(name = "RelateId", nullable = false, updatable = false)
+    private Resource relate;
+    
+    @XmlElement
+    @JsonManagedReference
+    @ManyToOne
+    @JoinColumn(name = "UserId", nullable = false, updatable = false)
+    private User user;
+        
+    @Column(name = "Created")
+    @XmlJavaTypeAdapter(LocalDateTimeConverter.class)
+    @ApiModelProperty(example="2016-10-07T04:05")
+    private LocalDateTime created;
+    
+    @Column(name = "Quantity", nullable = true, scale = 2, precision = 10)
+    private BigDecimal quantity;
 }
