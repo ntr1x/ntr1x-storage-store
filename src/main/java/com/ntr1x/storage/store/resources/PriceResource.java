@@ -23,22 +23,22 @@ import org.springframework.stereotype.Component;
 
 import com.ntr1x.storage.core.filters.IUserScope;
 import com.ntr1x.storage.core.transport.PageableQuery;
-import com.ntr1x.storage.store.model.Offer;
-import com.ntr1x.storage.store.services.IOfferService;
-import com.ntr1x.storage.store.services.IOfferService.OfferCreate;
-import com.ntr1x.storage.store.services.IOfferService.OfferPageResponse;
-import com.ntr1x.storage.store.services.IOfferService.OfferUpdate;
+import com.ntr1x.storage.store.model.Price;
+import com.ntr1x.storage.store.services.IPriceService;
+import com.ntr1x.storage.store.services.IPriceService.PriceCreate;
+import com.ntr1x.storage.store.services.IPriceService.PricePageResponse;
+import com.ntr1x.storage.store.services.IPriceService.PriceUpdate;
 
 import io.swagger.annotations.Api;
 
 @Api("Store")
 @Component
-@Path("/store/offers")
+@Path("/store/prices")
 @PermitAll
-public class OfferResource {
+public class PriceResource {
 
     @Inject
-    private IOfferService offers;
+    private IPriceService prices;
     
     @Inject
     private Provider<IUserScope> scope;
@@ -46,20 +46,20 @@ public class OfferResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
-    public OfferPageResponse query(
+    public PricePageResponse query(
         @QueryParam("user") Long user,
         @QueryParam("relate") Long relate,
         @BeanParam PageableQuery pageable
     ) {
         
-        Page<Offer> p = offers.query(
+        Page<Price> p = prices.query(
             scope.get().getId(),
             user,
             relate,
             pageable.toPageRequest()
         );
         
-        return new OfferPageResponse(
+        return new PricePageResponse(
             p.getTotalElements(),
             p.getNumber(),
             p.getSize(),
@@ -71,10 +71,10 @@ public class OfferResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
-    @RolesAllowed({ "res:///offers/:admin" })
-    public Offer create(@Valid OfferCreate create) {
+    @RolesAllowed({ "res:///prices/:admin" })
+    public Price create(@Valid PriceCreate create) {
 
-        return offers.create(scope.get().getId(), create);
+        return prices.create(scope.get().getId(), create);
     }
     
     @PUT
@@ -82,28 +82,28 @@ public class OfferResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
-    @RolesAllowed({ "res:///offers/i/{id}/:admin" })
-    public Offer update(@PathParam("id") long id, @Valid OfferUpdate update) {
+    @RolesAllowed({ "res:///prices/i/{id}/:admin" })
+    public Price update(@PathParam("id") long id, @Valid PriceUpdate update) {
         
-        return offers.update(scope.get().getId(), id, update);
+        return prices.update(scope.get().getId(), id, update);
     }
     
     @GET
     @Path("/i/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
-    public Offer select(@PathParam("id") long id) {
+    public Price select(@PathParam("id") long id) {
         
-        return offers.select(scope.get().getId(), id);
+        return prices.select(scope.get().getId(), id);
     }
     
     @DELETE
     @Path("/i/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
-    @RolesAllowed({ "res:///offers/i/{id}/:admin" })
-    public Offer remove(@PathParam("id") long id) {
+    @RolesAllowed({ "res:///prices/i/{id}/:admin" })
+    public Price remove(@PathParam("id") long id) {
         
-        return offers.remove(scope.get().getId(), id);
+        return prices.remove(scope.get().getId(), id);
     }
 }

@@ -1,6 +1,9 @@
 package com.ntr1x.storage.store.services;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
+import java.util.Map;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -10,6 +13,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.ntr1x.storage.archery.model.Store;
+import com.ntr1x.storage.archery.services.IStoreService;
 import com.ntr1x.storage.core.model.Resource;
 import com.ntr1x.storage.core.reflection.ResourceUtils;
 import com.ntr1x.storage.core.services.IResourceService;
@@ -17,6 +22,8 @@ import com.ntr1x.storage.security.model.User;
 import com.ntr1x.storage.security.services.ISecurityService;
 import com.ntr1x.storage.security.services.IUserService;
 import com.ntr1x.storage.store.model.Order;
+import com.ntr1x.storage.store.model.Price;
+import com.ntr1x.storage.store.model.Price.PriceCurrency;
 import com.ntr1x.storage.store.repository.OrderRepository;
 
 @Service
@@ -33,6 +40,9 @@ public class OrderService implements IOrderService {
     
     @Inject
     private IResourceService resources;
+    
+    @Inject
+    private IStoreService stores;
     
     @Inject
     private OrderRepository orders;
@@ -56,6 +66,10 @@ public class OrderService implements IOrderService {
     @Override
     public Order create(long scope, OrderCreate create) {
         
+        Store store = stores.select(scope, create.store);
+        
+        Map<String, String> params = stores.params(store, Store.ParamType.PUBLIC);
+        
         Order p = new Order(); {
             
             User user = users.select(scope, create.user);
@@ -67,6 +81,28 @@ public class OrderService implements IOrderService {
             p.setRelate(relate);
             p.setQuantity(create.quantity);
             p.setExtra(create.extra);
+            
+            if (relate instanceof Price) {
+                
+                Price price = (Price) relate;
+                
+                p.setPrice(
+                    price.getPrice().multiply(
+                        new BigDecimal(
+                            params.get(
+                                String.format(
+                                    "BUY.%s",
+                                    price.getCurrency().name()
+                                )
+                            )
+                        ).setScale(2, RoundingMode.HALF_UP)
+                    )
+                );
+                
+                p.setCurrency(
+                    PriceCurrency.valueOf(params.get("CURRENCY"))
+                );
+            }
             
             em.persist(p);
             em.flush();
@@ -83,7 +119,6 @@ public class OrderService implements IOrderService {
         
         Order p = orders.select(scope, id); {
             
-            p.setQuantity(update.quantity);
             p.setExtra(update.extra);
             
             em.merge(p);

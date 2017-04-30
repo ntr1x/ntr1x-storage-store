@@ -38,6 +38,11 @@
 			<artifactId>storage.uploads</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
+		<dependency>
+			<groupId>com.ntr1x.storage</groupId>
+			<artifactId>storage.archery</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
     </dependencies>
     <repositories>
         <repository>

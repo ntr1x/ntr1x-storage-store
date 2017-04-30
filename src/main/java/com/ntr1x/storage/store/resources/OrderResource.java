@@ -50,7 +50,7 @@ public class OrderResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
-    @RolesAllowed({ "res:///orders:admin" })
+    @RolesAllowed({ "res:///orders/:admin" })
     public OrderPageResponse query(
         @QueryParam("user") Long user,
         @QueryParam("relate") Long relate,
@@ -82,7 +82,7 @@ public class OrderResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
-    @RolesAllowed({ "res:///orders:admin" })
+    @RolesAllowed({ "res:///orders/:admin" })
     public Order create(@Valid OrderCreate create) {
 
         return orders.create(scope.get().getId(), create);
@@ -94,8 +94,8 @@ public class OrderResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
     @RolesAllowed({
-        "res:///orders/i/{id}:admin",
-        "res:///orders/i/{id}:client"
+        "res:///orders/i/{id}/:admin",
+        "res:///orders/i/{id}/:client"
     })
     public Order update(@PathParam("id") long id, @Valid OrderUpdate update) {
         
@@ -107,7 +107,7 @@ public class OrderResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
-    @RolesAllowed({ "res:///orders/i/{id}:admin" })
+    @RolesAllowed({ "res:///orders/i/{id}/:admin" })
     public Order accept(@PathParam("id") long id) {
         
         return orders.state(scope.get().getId(), id, Order.State.ACCEPTED);
@@ -118,7 +118,7 @@ public class OrderResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
-    @RolesAllowed({ "res:///orders/i/{id}:admin" })
+    @RolesAllowed({ "res:///orders/i/{id}/:admin" })
     public Order decline(@PathParam("id") long id) {
         
         return orders.state(scope.get().getId(), id, Order.State.DECLINED);
@@ -129,7 +129,7 @@ public class OrderResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
-    @RolesAllowed({ "res:///orders/i/{id}:client" })
+    @RolesAllowed({ "res:///orders/i/{id}/:client" })
     public Order cancel(@PathParam("id") long id) {
         
         return orders.state(scope.get().getId(), id, Order.State.CANCELLED);
@@ -140,8 +140,8 @@ public class OrderResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
     @RolesAllowed({
-        "res:///orders/i/{id}:admin",
-        "res:///orders/i/{id}:client"
+        "res:///orders/i/{id}/:admin",
+        "res:///orders/i/{id}/:client"
     })
     public Order select(@PathParam("id") long id) {
         
@@ -152,7 +152,7 @@ public class OrderResource {
     @Path("/i/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
-    @RolesAllowed({ "res:///orders/i/{id}:admin" })
+    @RolesAllowed({ "res:///orders/i/{id}/:admin" })
     public Order remove(@PathParam("id") long id) {
         
         return orders.remove(scope.get().getId(), id);

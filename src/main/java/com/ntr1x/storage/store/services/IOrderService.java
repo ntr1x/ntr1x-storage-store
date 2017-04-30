@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.ntr1x.storage.store.model.Order;
+import com.ntr1x.storage.store.model.Price;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -50,8 +51,10 @@ public interface IOrderService {
         
         public long relate;
         public long user;
+        public String store;
         
         public BigDecimal quantity;
+        public Price.PriceCurrency currency;
         
         @ApiModelProperty(dataType = "Object")
         public JsonNode extra;
@@ -61,11 +64,6 @@ public interface IOrderService {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class OrderUpdate {
-        
-        public long relate;
-        public long user;
-        
-        public BigDecimal quantity;
         
         @ApiModelProperty(dataType = "Object")
         public JsonNode extra;

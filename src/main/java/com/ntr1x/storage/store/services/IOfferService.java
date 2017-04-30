@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.ntr1x.storage.store.model.Offer;
+import com.ntr1x.storage.store.services.IPriceService.RelatedPrice;
 import com.ntr1x.storage.uploads.services.IImageService.RelatedImage;
 
 import io.swagger.annotations.ApiModelProperty;
@@ -59,6 +60,7 @@ public interface IOfferService {
         public JsonNode extra;
         
         public RelatedImage[] images;
+        public RelatedPrice[] prices;
     }
     
     @XmlRootElement
@@ -77,5 +79,6 @@ public interface IOfferService {
         public JsonNode extra;
         
         public RelatedImage[] images;
+        public RelatedPrice[] prices;
     }
 }

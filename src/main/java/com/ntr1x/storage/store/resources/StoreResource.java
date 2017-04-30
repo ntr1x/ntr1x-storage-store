@@ -21,24 +21,24 @@ import javax.ws.rs.core.MediaType;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
+import com.ntr1x.storage.archery.model.Store;
+import com.ntr1x.storage.archery.services.IStoreService;
+import com.ntr1x.storage.archery.services.IStoreService.StoreCreate;
+import com.ntr1x.storage.archery.services.IStoreService.StorePageResponse;
+import com.ntr1x.storage.archery.services.IStoreService.StoreUpdate;
 import com.ntr1x.storage.core.filters.IUserScope;
 import com.ntr1x.storage.core.transport.PageableQuery;
-import com.ntr1x.storage.store.model.Offer;
-import com.ntr1x.storage.store.services.IOfferService;
-import com.ntr1x.storage.store.services.IOfferService.OfferCreate;
-import com.ntr1x.storage.store.services.IOfferService.OfferPageResponse;
-import com.ntr1x.storage.store.services.IOfferService.OfferUpdate;
 
 import io.swagger.annotations.Api;
 
 @Api("Store")
 @Component
-@Path("/store/offers")
+@Path("/store/stores")
 @PermitAll
-public class OfferResource {
-
+public class StoreResource {
+    
     @Inject
-    private IOfferService offers;
+    private IStoreService stores;
     
     @Inject
     private Provider<IUserScope> scope;
@@ -46,20 +46,20 @@ public class OfferResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
-    public OfferPageResponse query(
+    public StorePageResponse shared(
+        @QueryParam("portal") Long portal,
         @QueryParam("user") Long user,
-        @QueryParam("relate") Long relate,
         @BeanParam PageableQuery pageable
     ) {
         
-        Page<Offer> p = offers.query(
+        Page<Store> p = stores.query(
             scope.get().getId(),
             user,
-            relate,
+            portal,
             pageable.toPageRequest()
         );
         
-        return new OfferPageResponse(
+        return new StorePageResponse(
             p.getTotalElements(),
             p.getNumber(),
             p.getSize(),
@@ -71,10 +71,10 @@ public class OfferResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
-    @RolesAllowed({ "res:///offers/:admin" })
-    public Offer create(@Valid OfferCreate create) {
+    @RolesAllowed({ "res:///stores/:admin" })
+    public Store create(@Valid StoreCreate create) {
 
-        return offers.create(scope.get().getId(), create);
+        return stores.create(scope.get().getId(), create);
     }
     
     @PUT
@@ -82,28 +82,29 @@ public class OfferResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
-    @RolesAllowed({ "res:///offers/i/{id}/:admin" })
-    public Offer update(@PathParam("id") long id, @Valid OfferUpdate update) {
+    @RolesAllowed({ "res:///stores/i/{id}/:admin" })
+    public Store update(@PathParam("id") long id, @Valid StoreUpdate update) {
         
-        return offers.update(scope.get().getId(), id, update);
+        return stores.update(scope.get().getId(), id, update);
     }
     
     @GET
     @Path("/i/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
-    public Offer select(@PathParam("id") long id) {
+    @RolesAllowed({ "res:///stores/i/{id}/:admin" })
+    public Store select(@PathParam("id") long id) {
         
-        return offers.select(scope.get().getId(), id);
+        return stores.select(scope.get().getId(), id);
     }
     
     @DELETE
     @Path("/i/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
-    @RolesAllowed({ "res:///offers/i/{id}/:admin" })
-    public Offer remove(@PathParam("id") long id) {
+    @RolesAllowed({ "res:///stores/i/{id}/:admin" })
+    public Store remove(@PathParam("id") long id) {
         
-        return offers.remove(scope.get().getId(), id);
+        return stores.remove(scope.get().getId(), id);
     }
 }

@@ -39,6 +39,9 @@ public class OfferService implements IOfferService {
     @Inject
     private IImageService images;
     
+    @Inject
+    private IPriceService prices;
+    
     @Override
     public Offer create(long scope, OfferCreate create) {
         
@@ -62,6 +65,9 @@ public class OfferService implements IOfferService {
             
             security.register(p, ResourceUtils.alias(null, "offers/i", p));
             security.grant(p.getScope(), user, p.getAlias(), "admin");
+            
+            images.createImages(p, create.images);
+            prices.createPrices(p, user, create.prices);
         }
         
         return p;
@@ -82,6 +88,9 @@ public class OfferService implements IOfferService {
             
             em.merge(p);
             em.flush();
+            
+            images.updateImages(p, update.images);
+            prices.updatePrices(p, p.getUser(), update.prices);
         }
         
         return p;

@@ -6,6 +6,8 @@ import java.util.EnumSet;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
@@ -16,9 +18,11 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import org.eclipse.persistence.annotations.CascadeOnDelete;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.ntr1x.storage.archery.model.Store;
 import com.ntr1x.storage.core.converter.ConverterProvider.LocalDateTimeConverter;
 import com.ntr1x.storage.core.model.Resource;
 import com.ntr1x.storage.security.model.User;
+import com.ntr1x.storage.store.model.Price.PriceCurrency;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -64,6 +68,7 @@ public class Order extends Resource {
     }
     
     @Column(name = "State", nullable = false)
+    @Enumerated(EnumType.STRING)
     private State state;
     
     @XmlElement
@@ -77,11 +82,24 @@ public class Order extends Resource {
     @ManyToOne
     @JoinColumn(name = "UserId", nullable = false, updatable = false)
     private User user;
-        
+    
+    @XmlElement
+    @JsonManagedReference
+    @ManyToOne
+    @JoinColumn(name = "StoreId", nullable = true, updatable = false)
+    private Store store;
+    
     @Column(name = "Created")
     @XmlJavaTypeAdapter(LocalDateTimeConverter.class)
     @ApiModelProperty(example="2016-10-07T04:05")
     private LocalDateTime created;
+    
+    @Column(name = "Price", nullable = true, scale = 2, precision = 10)
+    private BigDecimal price;
+    
+    @Column(name = "Currency", nullable = true)
+    @Enumerated(EnumType.STRING)
+    private PriceCurrency currency;
     
     @Column(name = "Quantity", nullable = true, scale = 2, precision = 10)
     private BigDecimal quantity;
