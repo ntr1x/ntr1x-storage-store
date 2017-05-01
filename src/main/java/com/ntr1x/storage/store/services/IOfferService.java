@@ -10,7 +10,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.ntr1x.storage.archery.services.IStoreService.StoreContext;
 import com.ntr1x.storage.store.model.Offer;
+import com.ntr1x.storage.store.model.Price;
 import com.ntr1x.storage.store.services.IPriceService.RelatedPrice;
 import com.ntr1x.storage.uploads.services.IImageService.RelatedImage;
 
@@ -28,6 +30,21 @@ public interface IOfferService {
     Page<Offer> query(Long scope, Long user, Long relate, Pageable pageable);
     
     Offer remove(Long scope, long id);
+    
+    @XmlRootElement
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class OfferContext {
+        
+        @XmlElement
+        public Offer offer;
+        
+        @XmlElement
+        public List<Price> prices;
+        
+        @XmlElement
+        public List<StoreContext> stores;
+    }
     
     @XmlRootElement
     @NoArgsConstructor

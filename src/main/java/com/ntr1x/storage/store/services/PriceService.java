@@ -144,6 +144,7 @@ public class PriceService implements IPriceService {
                             
                             p.setScope(resource.getScope());
                             p.setUser(user);
+                            p.setRelate(resource);
                             p.setTitle(t.title);
                             p.setPrice(t.price);
                             p.setCurrency(t.currency);

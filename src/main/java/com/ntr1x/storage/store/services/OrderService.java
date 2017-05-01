@@ -17,6 +17,7 @@ import com.ntr1x.storage.archery.model.Store;
 import com.ntr1x.storage.archery.services.IStoreService;
 import com.ntr1x.storage.core.model.Resource;
 import com.ntr1x.storage.core.reflection.ResourceUtils;
+import com.ntr1x.storage.core.services.IParamService;
 import com.ntr1x.storage.core.services.IResourceService;
 import com.ntr1x.storage.security.model.User;
 import com.ntr1x.storage.security.services.ISecurityService;
@@ -45,6 +46,9 @@ public class OrderService implements IOrderService {
     private IStoreService stores;
     
     @Inject
+    private IParamService params;
+    
+    @Inject
     private OrderRepository orders;
     
     @Override
@@ -68,7 +72,7 @@ public class OrderService implements IOrderService {
         
         Store store = stores.select(scope, create.store);
         
-        Map<String, String> params = stores.params(store, Store.ParamType.PUBLIC);
+        Map<String, String> map = params.map(scope, store.getId(), Store.ParamType.PUBLIC.name());
         
         Order p = new Order(); {
             
@@ -89,7 +93,7 @@ public class OrderService implements IOrderService {
                 p.setPrice(
                     price.getPrice().multiply(
                         new BigDecimal(
-                            params.get(
+                                map.get(
                                 String.format(
                                     "BUY.%s",
                                     price.getCurrency().name()
@@ -100,7 +104,7 @@ public class OrderService implements IOrderService {
                 );
                 
                 p.setCurrency(
-                    PriceCurrency.valueOf(params.get("CURRENCY"))
+                    PriceCurrency.valueOf(map.get("CURRENCY"))
                 );
             }
             

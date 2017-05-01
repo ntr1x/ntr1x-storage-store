@@ -1,5 +1,7 @@
 package com.ntr1x.storage.store.resources;
 
+import java.util.stream.Collectors;
+
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
@@ -21,13 +23,17 @@ import javax.ws.rs.core.MediaType;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
+import com.ntr1x.storage.archery.model.Store;
+import com.ntr1x.storage.archery.services.IStoreService;
 import com.ntr1x.storage.core.filters.IUserScope;
+import com.ntr1x.storage.core.services.IParamService;
 import com.ntr1x.storage.core.transport.PageableQuery;
 import com.ntr1x.storage.store.model.Offer;
 import com.ntr1x.storage.store.services.IOfferService;
 import com.ntr1x.storage.store.services.IOfferService.OfferCreate;
 import com.ntr1x.storage.store.services.IOfferService.OfferPageResponse;
 import com.ntr1x.storage.store.services.IOfferService.OfferUpdate;
+import com.ntr1x.storage.store.services.IPriceService;
 
 import io.swagger.annotations.Api;
 
@@ -39,6 +45,15 @@ public class OfferResource {
 
     @Inject
     private IOfferService offers;
+    
+    @Inject
+    private IStoreService stores;
+    
+    @Inject
+    private IPriceService prices;
+    
+    @Inject
+    private IParamService params;
     
     @Inject
     private Provider<IUserScope> scope;
@@ -73,7 +88,7 @@ public class OfferResource {
     @Transactional
     @RolesAllowed({ "res:///offers/:admin" })
     public Offer create(@Valid OfferCreate create) {
-
+        
         return offers.create(scope.get().getId(), create);
     }
     
@@ -95,6 +110,28 @@ public class OfferResource {
     public Offer select(@PathParam("id") long id) {
         
         return offers.select(scope.get().getId(), id);
+    }
+    
+    @GET
+    @Path("/i/{id}/context")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Transactional
+    public IOfferService.OfferContext context(@PathParam("id") long id) {
+        
+        Offer offer = offers.select(scope.get().getId(), id);
+        
+        return new IOfferService.OfferContext(
+            offer,
+            prices.query(scope.get().getId(), null, offer.getId(), null).getContent(),
+            stores.query(scope.get().getId(), null, null, null).getContent().stream()
+                .map(
+                    (s) -> new IStoreService.StoreContext(
+                        s,
+                        params.map(scope.get().getId(), s.getId(), Store.ParamType.PUBLIC.name())
+                    )
+                )
+                .collect(Collectors.toList())
+        );
     }
     
     @DELETE
